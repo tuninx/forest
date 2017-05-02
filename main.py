@@ -100,6 +100,8 @@ orders = {
     'lvl_def': '+1 🛡Защита',
     'lvl_atk': '+1 ⚔️Атака',
     'lvl_off': 'Выключен'
+    'kirka': '/on_119',
+    'rapira': '/on_106',
 }
 
 captcha_answers = {
@@ -281,6 +283,7 @@ def parse_text(text, username, message_id):
                                 else:
                                     log('Донат {0} золота в казну замка'.format(gold-gold_to_left))
                                     action_list.append('/donate {0}'.format(gold-gold_to_left))
+                        action_list.append(orders['rapira'])
                         fwd('@', cbot_name, hero_message_id)
                         update_order(castle)
                     return
@@ -292,13 +295,16 @@ def parse_text(text, username, message_id):
             log('Рюкзак: {0} / {1}'.format(inv.group(1),inv.group(2)))
             if peshera_enabled and endurance >= 2 and text.find('🛌Отдых') != -1:
                 if les_enabled:
+                    action_list.append(orders['kirka'])
                     action_list.append(orders['quests'])
                     action_list.append(random.choice([orders['peshera'], orders['les']]))
                 else:
+                    action_list.append(orders['kirka'])
                     action_list.append(orders['quests'])
                     action_list.append(orders['peshera'])
 
             elif les_enabled and not peshera_enabled and endurance >= 1 and orders['les'] not in action_list and text.find('🛌Отдых') != -1:
+                action_list.append(orders['kirka'])
                 action_list.append(orders['quests'])
                 action_list.append(orders['les'])
 
@@ -307,6 +313,7 @@ def parse_text(text, username, message_id):
                 if 9 <= curhour <= 23:
                     log('Включаем флаг - арена запущена')
                     arena_running = True
+                    action_list.append(orders['rapira'])
                     action_list.append(orders['castle_menu'])
                     action_list.append('📯Арена')
                     action_list.append('🔎Поиск соперника')
